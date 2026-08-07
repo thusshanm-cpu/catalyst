@@ -1,10 +1,19 @@
 import { useStore } from '../store.jsx'
+import { useToast } from '../toast.jsx'
+import { DEMO_PROFILES } from '../data.js'
 import { Check } from '../components/icons.jsx'
 
 export default function Landing() {
   const { api } = useStore()
+  const { toast } = useToast()
 
   const go = (role) => api.navigate('onboarding') /* role picked on the onboarding step 1 */
+
+  /* judge-mode shortcut: skip onboarding entirely, land verified on the dashboard */
+  const instant = (role) => {
+    api.completeOnboarding(DEMO_PROFILES[role])
+    toast(role === 'candidate' ? 'Demo student verified — welcome to the room' : 'Demo company verified — welcome to the room', '⚡')
+  }
 
   return (
     <div>
@@ -54,6 +63,10 @@ export default function Landing() {
               <span className="check"><Check size={13} /></span> Free for students · Verify once ·
               You only see the role, never the company
             </p>
+            <div style={{ display: 'flex', gap: 10, marginTop: 26, flexWrap: 'wrap' }}>
+              <button className="btn btn-ghost btn-sm" onClick={() => instant('candidate')}>⚡ Instant demo · student</button>
+              <button className="btn btn-ghost btn-sm" onClick={() => instant('employer')}>⚡ Instant demo · startup</button>
+            </div>
           </div>
 
           <LiveMock />
@@ -81,7 +94,7 @@ export default function Landing() {
               ['Verify', 'Every account is reviewed by a human — government ID, face match, education, and a real company behind every employer.'],
               ['Match blind', 'You pick your field, we pick the room. You know the role — never the company. No name bias in the first round.'],
               ['Interview live', 'A ten-minute video session. The employer sets the scene, then it\u2019s unscripted — including on-the-spot startup simulations.'],
-              ['Decide & unlock', 'Skip, save, or ask for a follow-up. If they\u2019re interested, the employer unlocks your verified profile. The resume comes last.'],
+              ['Resume at match', 'The moment you match, the startup receives your verified resume — then evaluates how you think, live, before unlocking your full profile.'],
             ].map(([t, b], i) => (
               <div className="step-card" key={t}>
                 <span className="step-num">{String(i + 1).padStart(2, '0')}</span>

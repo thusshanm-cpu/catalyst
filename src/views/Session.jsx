@@ -212,7 +212,9 @@ export default function Session() {
                 {s.tagline && <div className="video-tag"><span className="mic">●</span>{isCandidate ? `${s.counterpart.title} · ${s.tagline}` : `${s.counterpart.title}`}</div>}
                 {s.counterpart.anon && (
                   <div className="video-tag" style={{ right: 14, left: 'auto' }}>
-                    <span className="live-dot" /> {peerOnline ? 'secure link · identity hidden' : 'peer offline'}
+                    <span className="live-dot" /> {!isCandidate && s.counterpart.resume
+                      ? 'resume shared at match'
+                      : (peerOnline ? 'secure link · identity hidden' : 'peer offline')}
                   </div>
                 )}
               </div>
@@ -266,6 +268,36 @@ export default function Session() {
             </>
           ) : (
             <>
+              {s.counterpart.resume && (
+                <div className="rail-card resume-rail">
+                  <h4>Candidate resume · shared at match</h4>
+                  <div className="rr-head">
+                    <div className="avatar" style={{ width: 36, height: 36, fontSize: 13 }}>{s.counterpart.resume.name.split(' ').map((w) => w[0]).join('').slice(0, 2)}</div>
+                    <div>
+                      <div style={{ fontWeight: 600, fontSize: 14.5 }}>{s.counterpart.resume.name}</div>
+                      <div className="text-3" style={{ fontSize: 12 }}>{s.counterpart.resume.program}{s.counterpart.resume.school ? ` · ${s.counterpart.resume.school}` : ''}</div>
+                    </div>
+                  </div>
+                  {s.counterpart.resume.resumeName && (
+                    <div className="rr-file">📄 {s.counterpart.resume.resumeName} · verified on Catalyst</div>
+                  )}
+                  <ul className="rr-bullets">
+                    {(s.counterpart.resume.bullets || []).slice(0, 3).map((b) => <li key={b}>{b}</li>)}
+                  </ul>
+                  {s.counterpart.resume.links && (
+                    <div className="rr-links">
+                      {Object.entries(s.counterpart.resume.links).map(([k, v]) => (
+                        <span key={k} className="rr-link">{k === 'github' ? 'GH' : k === 'linkedin' ? 'IN' : 'PF'} · {v}</span>
+                      ))}
+                    </div>
+                  )}
+                  {s.counterpart.resume.certs?.length > 0 && (
+                    <div className="rr-certs">
+                      {s.counterpart.resume.certs.map((c) => <span key={c} className="v-chip">✓ {c}</span>)}
+                    </div>
+                  )}
+                </div>
+              )}
               <div className="rail-card">
                 <h4>Set the scene</h4>
                 <p className="session-notes" style={{ marginBottom: 12 }}>

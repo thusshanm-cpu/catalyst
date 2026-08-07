@@ -1,3 +1,27 @@
+// ————— Judge-mode demo profiles (instant sign-up + onboarding prefill) —————
+
+export const DEMO_PROFILES = {
+  candidate: {
+    role: 'candidate',
+    name: 'Jordan Lee',
+    email: 'jordan@uwaterloo.ca',
+    school: 'University of Waterloo',
+    program: 'Computer Science · 3rd year',
+    location: 'Toronto, Canada',
+    resumeName: 'jordan_lee_resume.pdf',
+    fields: ['software', 'marketing'],
+  },
+  employer: {
+    role: 'employer',
+    name: 'Priya Nair',
+    email: 'priya@heliosrobotics.com',
+    company: 'Helios Robotics',
+    title: 'Co-founder & CTO',
+    website: 'heliosrobotics.com',
+    fields: ['software', 'product'],
+  },
+}
+
 // ————— Core vocabulary —————
 
 export const FIELDS = [

@@ -6,6 +6,23 @@ import { CANDIDATE_QUEUE, CANDIDATES, EMPLOYER_QUEUE, STARTUPS, fieldLabel, SIMU
 
 const FIELD_ICONS = { software: '⚙️', civil: '🏗️', business: '📊', finance: '💰', marketing: '📣', design: '🎨', product: '🧭', sales: '🤝', accounting: '🧮' }
 
+/* the candidate's verified profile as a shareable resume snapshot */
+const resumeOf = (u) => ({
+  name: u?.name || 'Verified candidate',
+  school: u?.school || '',
+  program: u?.program || (u?.fields?.length ? `${u.fields.map(fieldLabel).join(' · ')}` : ''),
+  location: u?.location || '',
+  resumeName: u?.resumeName || '',
+  bullets: [
+    'Finalist, regional case competition',
+    'Led a 4-person project sprint',
+    'Built a portfolio of applied coursework',
+  ],
+  links: { github: 'github.com/you', linkedin: 'in/you', portfolio: 'you.dev' },
+  certs: ['Verified on Catalyst'],
+  verified: ['ID verified', 'Face matched', 'School email confirmed'],
+})
+
 export default function Dashboard() {
   const { state, api } = useStore()
   const { toast } = useToast()
@@ -17,10 +34,11 @@ export default function Dashboard() {
   const [presence, setPresence] = useState([])
 
   useEffect(() => {
-    Match.init({ role: user?.role, fields: user?.fields })
+    Match.init({ role: user?.role, fields: user?.fields, resume: isCandidate ? resumeOf(user) : null })
     const off = Match.on('presence', setPresence)
     return () => { off(); Match.cancelSearch() }
-  }, [user?.role, user?.fields])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.role, user?.fields, isCandidate])
 
   const mainField = user?.fields?.[0] || 'software'
   const fields = user?.fields?.length ? user.fields : ['software']
@@ -39,8 +57,8 @@ export default function Dashboard() {
         ? { anon: true, name: 'Verified startup', title: `Hiring ${fieldLabel(field)} · ${anon.roleType || 'Intern'}`, org: '', you: 'Candidate' }
         : { name: STARTUPS[0].founder, title: STARTUPS[0].title, org: STARTUPS[0].name, tagline: STARTUPS[0].tagline, you: 'Candidate' })
       : (anon
-        ? { anon: true, name: 'Verified student', title: `${anon.note} · ${fieldLabel(field)}`, org: '', you: 'Employer' }
-        : { name: CANDIDATES[0].name, title: CANDIDATES[0].program, org: CANDIDATES[0].school, you: 'Employer' })
+        ? { anon: true, name: anon.resume?.name || 'Verified student', title: anon.resume ? `${anon.resume.program || fieldLabel(field)} · ${anon.resume.school || 'Verified student'}` : `${anon.note} · ${fieldLabel(field)}`, org: '', resume: anon.resume || null, you: 'Employer' }
+        : { name: CANDIDATES[0].name, title: CANDIDATES[0].program, org: CANDIDATES[0].school, resume: { name: CANDIDATES[0].name, school: CANDIDATES[0].school, program: CANDIDATES[0].program, location: 'Toronto, Canada', resumeName: 'maya_chen_resume.pdf', bullets: CANDIDATES[0].resume, links: CANDIDATES[0].links, certs: CANDIDATES[0].certs, verified: CANDIDATES[0].verified }, you: 'Employer' })
 
     api.startSession({
       id: Date.now(),
@@ -155,7 +173,7 @@ export default function Dashboard() {
                   : 'Open Catalyst in a second tab as a student and press start — you\u2019ll meet a live candidate, blind, on the role only.')
                 : (isCandidate
                   ? '3 verified startups are hiring this role right now. You\u2019ll know the role — not the company.'
-                  : 'They know the role and nothing else. No name, no school, no resume — until you unlock it.')}
+                  : 'The candidate\u2019s verified resume lands in your hands the moment you match — then you judge how they think, live.')}
             </p>
           </div>
           <button className="btn btn-primary btn-lg" disabled={!!searching} onClick={() => start(mainField, 'Intern')}>

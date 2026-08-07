@@ -47,8 +47,9 @@ export default function Profile() {
           <div className="lock-banner" style={{ marginTop: 18 }}>
             <span className="lock">🔓</span>
             <span>
-              <strong style={{ color: 'var(--text)' }}>Profile unlocked.</strong> You evaluated
-              {mock.name.split(' ')[0]} live, on a scenario — the resume only showed up after you decided they were worth it.
+              <strong style={{ color: 'var(--text)' }}>Profile unlocked.</strong> Their verified resume
+              arrived the moment you matched — this full profile (portfolio, GitHub, credentials)
+              opens after you decide they're worth a second look.
             </span>
           </div>
         )}

@@ -40,10 +40,12 @@ still live-match via BroadcastChannel.
 | Unexpected changes | Employer fires mid-session curveballs (upset customer, investor changes, disagreeing teammate) |
 | Collaboration | Shared whiteboard with pen/eraser/colors + simulated teammate sketching |
 | Post-session | Continue / follow-up / save / skip, consent-gated **AI summary** with animated scores |
-| Profile unlock | Employer unlocks the candidate's verified profile after the session — resume comes last |
+| Resume at match | The candidate's verified resume arrives with the match; the employer unlocks the full profile (portfolio, GitHub, credentials) after the session |
 
 ## Demo tips
 
+- **⚡ Instant demo buttons** on the landing page jump straight to a verified dashboard (skip onboarding entirely) — perfect for judges.
+- **⚡ Pre-fill demo data** inside onboarding fills every field in one click, and **Skip animation** fast-forwards the review — ~6 clicks to a verified account.
 - **DEMO SPEED** toggle (dashboard) shrinks sessions to 90s for quick demos.
 - The **CANDIDATE / EMPLOYER** toggle inside a demo session lets you demo both sides from one screen.
 - Camera blocked? Every face-capture step offers a placeholder fallback.

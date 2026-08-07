@@ -682,7 +682,7 @@ input, select, textarea { font-family: inherit; color: var(--text); }
 .self-tile .you-tag { position: absolute; left: 8px; bottom: 8px; font-size: 10.5px; font-family: var(--font-mono); color: var(--text-2); background: rgba(13,12,10,0.7); border-radius: 6px; padding: 3px 8px; }
 .self-off { width: 100%; height: 100%; display: grid; place-items: center; color: var(--text-3); font-size: 11.5px; font-family: var(--font-mono); }
 
-.session-rail { display: flex; flex-direction: column; gap: 14px; min-height: 0; }
+.session-rail { display: flex; flex-direction: column; gap: 14px; min-height: 0; overflow-y: auto; padding-right: 2px; }
 .rail-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 18px; }
 .rail-card h4 { font-family: var(--font-display); font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-2); margin-bottom: 12px; }
 .rail-actions { display: grid; gap: 9px; }
@@ -702,6 +702,26 @@ input, select, textarea { font-family: inherit; color: var(--text); }
 .sim-opt.armed { border-color: var(--violet); background: rgba(139, 124, 255, 0.08); box-shadow: 0 0 0 1px var(--violet) inset; }
 
 .session-notes { font-size: 12.5px; color: var(--text-3); line-height: 1.6; }
+
+/* Candidate resume — shared with the startup at match */
+.resume-rail .rr-head { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+.resume-rail .rr-file {
+  font-family: var(--font-mono); font-size: 11px; color: var(--mint);
+  background: rgba(79, 209, 165, 0.08); border: 1px solid rgba(79, 209, 165, 0.3);
+  border-radius: 8px; padding: 5px 10px; margin-bottom: 10px; display: inline-block;
+}
+.resume-rail .rr-bullets { list-style: none; display: grid; gap: 7px; margin-bottom: 10px; }
+.resume-rail .rr-bullets li {
+  font-size: 12px; color: var(--text-2); line-height: 1.5; padding-left: 12px; position: relative;
+}
+.resume-rail .rr-bullets li::before { content: '·'; position: absolute; left: 0; color: var(--ember); }
+.resume-rail .rr-links { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.resume-rail .rr-link {
+  font-family: var(--font-mono); font-size: 10.5px; color: var(--violet);
+  border: 1px solid rgba(139, 124, 255, 0.35); background: rgba(139, 124, 255, 0.08);
+  border-radius: 999px; padding: 3px 9px;
+}
+.resume-rail .rr-certs { display: flex; flex-wrap: wrap; gap: 6px; }
 
 /* Matchmaking overlay */
 .mm-overlay { position: absolute; inset: 0; z-index: 10; display: grid; place-items: center; background: radial-gradient(700px 400px at 50% 40%, rgba(139, 124, 255, 0.1), transparent 60%), var(--bg); }

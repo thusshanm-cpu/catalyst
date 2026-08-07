@@ -16,7 +16,7 @@ const SEARCH_MS = 1200
 const STALE_MS = 6500
 
 let channel = null
-let me = null            // { id, role, fields }
+let me = null            // { id, role, fields, resume }
 let peers = new Map()    // id -> { id, role, fields, ts }
 let isSearching = false
 let searchingField = null
@@ -64,9 +64,17 @@ function post(msg) {
 /* ————— identity & presence ————— */
 
 function anonFor(role, field) {
-  return role === 'employer'
-    ? { anonId: me.id, role, field, roleType: 'startup', note: 'Verified startup · hiring now' }
-    : { anonId: me.id, role, field, roleType: 'Intern', note: 'Verified student' }
+  // Candidates share a resume snapshot at match (the startup's first look);
+  // employers stay anonymous — the candidate only knows the role.
+  if (role === 'employer') return { anonId: me.id, role, field, roleType: 'startup', note: 'Verified startup · hiring now' }
+  return {
+    anonId: me.id,
+    role,
+    field,
+    roleType: 'Intern',
+    note: 'Verified student',
+    resume: me.resume || null,
+  }
 }
 
 function announce() {
@@ -199,11 +207,12 @@ function handleMessage(msg) {
 
 export const Match = {
   /** idempotent — sets identity, starts presence heartbeats */
-  init({ role, fields }) {
+  init({ role, fields, resume }) {
     ensureChannel()
     const nextFields = fields || []
     const same = me && me.role === role && JSON.stringify(me.fields) === JSON.stringify(nextFields)
-    me = same ? me : { id: uid(), role, fields: nextFields }
+    me = same ? me : { id: uid(), role, fields: nextFields, resume: resume || null }
+    if (resume) me.resume = resume
     if (!channel) return this
     announce()
     if (!hbTimer) hbTimer = setInterval(heartbeat, HB_MS)

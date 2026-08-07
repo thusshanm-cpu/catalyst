@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useStore } from '../store.jsx'
 import { useToast } from '../toast.jsx'
-import { FIELDS } from '../data.js'
+import { FIELDS, DEMO_PROFILES } from '../data.js'
 
 const REVIEW_STEPS = [
   ['Government ID review', 'Documents match the applicant record'],
@@ -20,6 +20,8 @@ export default function Onboarding() {
     name: '',
     email: '',
     school: '',
+    program: '',
+    location: '',
     company: '',
     title: '',
     website: '',
@@ -35,6 +37,27 @@ export default function Onboarding() {
   const [reviewed, setReviewed] = useState(false)
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }))
+
+  /* judge-mode shortcut: pre-fill every field so the flow can be clicked through */
+  const prefill = () => {
+    const d = DEMO_PROFILES[role] || DEMO_PROFILES.candidate
+    setForm((f) => ({
+      ...f,
+      ...d,
+      resume: { name: d.resumeName },
+      idName: 'driver_license.jpg',
+      emailCode: '482913',
+      emailVerified: true,
+      facePhoto: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="24" r="14" fill="%238b7cff"/><path d="M10 58c2-16 44-16 44 0z" fill="%23ff5c3a"/></svg>',
+    }))
+    toast('Demo data filled — just click Continue', '⚡')
+  }
+
+  const skipReview = () => {
+    setReviewIdx(REVIEW_STEPS.length - 1)
+    setReviewed(true)
+    toast('Review fast-forwarded for the demo', '⏩')
+  }
 
   const isCandidate = role === 'candidate'
   const STEPS = isCandidate
@@ -73,6 +96,9 @@ export default function Onboarding() {
       name: form.name,
       email: form.email,
       school: isCandidate ? form.school : undefined,
+      program: isCandidate ? form.program : undefined,
+      location: isCandidate ? form.location : undefined,
+      resumeName: isCandidate ? form.resumeName : undefined,
       company: !isCandidate ? form.company : undefined,
       title: !isCandidate ? form.title : undefined,
       fields: form.fields,
@@ -94,6 +120,10 @@ export default function Onboarding() {
             {STEPS.map((_, i) => (
               <div key={i} className={`step-tick ${i < step - 1 ? 'done' : i === step - 1 ? 'now' : ''}`} />
             ))}
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 14 }}>
+            <button className="btn btn-ghost btn-sm" onClick={prefill}>⚡ Pre-fill demo data</button>
           </div>
 
           <h1 className="display display-md" style={{ marginBottom: 8 }}>
@@ -176,7 +206,7 @@ export default function Onboarding() {
               <UploadBox
                 icon="📄"
                 title="Resume / education history"
-                sub="PDF or link — this is only revealed after a match"
+                sub="PDF or link — startups get this the moment you match"
                 done={!!form.resumeName}
                 onChange={(f) => { set('resume', f); set('resumeName', f?.name || '') }}
               />
@@ -261,7 +291,10 @@ export default function Onboarding() {
                       </div>
                     ))}
                   </div>
-                  <p className="text-3" style={{ fontSize: 13 }}>Human review takes about a minute. Everything is encrypted.</p>
+                  <div style={{ display: 'flex', gap: 10, alignItems: 'center', justifyContent: 'center' }}>
+                    <p className="text-3" style={{ fontSize: 13 }}>Human review takes about a minute. Everything is encrypted.</p>
+                    <button className="btn btn-ghost btn-sm" onClick={skipReview} style={{ marginLeft: 'auto' }}>⏩ Skip animation</button>
+                  </div>
                 </>
               ) : (
                 <>
@@ -270,7 +303,7 @@ export default function Onboarding() {
                   <p className="muted" style={{ maxWidth: 440, margin: '0 auto 26px' }}>
                     {isCandidate
                       ? 'Startups hiring in your fields are live right now. They know the role you\u2019re interviewing for — and nothing else about you.'
-                      : 'Candidates in your hiring fields are ready. You\u2019ll meet them blind, and unlock profiles after the session.'}
+                      : 'Candidates in your hiring fields are ready. Their verified resumes arrive the moment you match — then you judge them live.'}
                   </p>
                   <button className="btn btn-primary btn-lg" onClick={finish}>
                     {isCandidate ? 'Enter the room →' : 'Go live as a company →'}
