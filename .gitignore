@@ -1,0 +1,25 @@
+# dependencies
+node_modules/
+
+# build output
+dist/
+
+# local tunnel binary + logs
+.deploy/
+cloudflared.log
+vite-dev.log
+
+# Freebuff desktop local state (databases, not part of the project)
+.freebuff/
+desktop.db*
+desktop-v2.db*
+
+# logs
+*.log
+npm-debug.log*
+
+# editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
