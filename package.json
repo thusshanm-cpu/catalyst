@@ -1,5 +1,6 @@
 {
   "name": "catalyst",
+  "description": "Catalyst — interview for potential, not resumes. Blind 10-minute video interviews and startup simulations between verified students and startups. React + Vite prototype.",
   "private": true,
   "version": "0.1.0",
   "type": "module",
