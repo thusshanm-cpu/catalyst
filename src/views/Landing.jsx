@@ -1,11 +1,19 @@
+import { useEffect, useState } from 'react'
+import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react'
 import { useStore } from '../store.jsx'
 import { useToast } from '../toast.jsx'
 import { DEMO_PROFILES } from '../data.js'
-import { Check, Zap, Bug, Target, Megaphone, Coins } from '../components/icons.jsx'
+import Reveal from '../components/Reveal.jsx'
+import { Check, Zap, Bug, Target, Megaphone, Coins, Fingerprint, Shield, Building, Warning, ArrowUpRight } from '../components/icons.jsx'
 
 export default function Landing() {
   const { api } = useStore()
   const { toast } = useToast()
+  const reduce = useReducedMotion()
+
+  /* the hero mock drifts slower than the page — Motion scroll-linked parallax */
+  const { scrollY } = useScroll()
+  const mockY = useTransform(scrollY, [0, 900], [0, 81])
 
   const go = (role) => api.navigate('onboarding') /* role picked on the onboarding step 1 */
 
@@ -22,10 +30,10 @@ export default function Landing() {
         <div className="container nav-inner">
           <div className="brand" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
             <svg className="brand-mark" viewBox="0 0 32 32">
-              <rect width="32" height="32" rx="9" fill="none" stroke="rgba(242,237,228,.25)" />
-              <circle cx="14" cy="16" r="5" fill="#FF5C3A" />
-              <circle cx="22" cy="10" r="3" fill="#FF8A5C" />
-              <circle cx="22" cy="22" r="3" fill="#4FD1A5" />
+              <rect width="32" height="32" rx="9" fill="none" stroke="rgba(255,255,255,.25)" />
+              <circle cx="14" cy="16" r="5" fill="#5fed83" />
+              <circle cx="22" cy="10" r="3" fill="#8dd6ff" />
+              <circle cx="22" cy="22" r="3" fill="#8c93fb" />
             </svg>
             Catalyst
           </div>
@@ -46,30 +54,32 @@ export default function Landing() {
       <header className="hero">
         <div className="container hero-grid">
           <div className="hero-copy">
-            <span className="eyebrow">Live talent discovery</span>
-            <h1 className="display display-xl">
-              The resume is the <em>last thing</em> we look at.
-            </h1>
-            <p className="hero-sub">
-              Catalyst pairs verified students with startups for blind, ten-minute video
-              interviews and on-the-spot startup simulations — so hiring runs on how you think
-              under pressure, not where you&apos;ve worked.
-            </p>
-            <div className="hero-cta">
-              <button className="btn btn-primary btn-lg" onClick={() => go('candidate')}>Interview as a student</button>
-              <button className="btn btn-violet btn-lg" onClick={() => go('employer')}>Hire as a startup</button>
-            </div>
-            <p className="hero-note">
-              <span className="check"><Check size={13} /></span> Free for students · Verify once ·
-              You only see the role, never the company
-            </p>
-            <div style={{ display: 'flex', gap: 10, marginTop: 26, flexWrap: 'wrap' }}>
-              <button className="btn btn-ghost btn-sm" onClick={() => instant('candidate')}><Zap size={13} /> Instant demo · student</button>
-              <button className="btn btn-ghost btn-sm" onClick={() => instant('employer')}><Zap size={13} /> Instant demo · startup</button>
-            </div>
+            <Reveal><span className="eyebrow">Live talent discovery</span></Reveal>
+            <Reveal delay={90}>
+              <h1 className="display display-xl">
+                <span className="hero-line"><motion.span className="hero-line-in" initial={reduce ? false : { y: '112%' }} animate={{ y: 0 }} transition={{ delay: 0.12, duration: 0.85, ease: [0.16, 1, 0.3, 1] }}>The resume is the</motion.span></span>
+                <span className="hero-line"><motion.span className="hero-line-in" initial={reduce ? false : { y: '112%' }} animate={{ y: 0 }} transition={{ delay: 0.3, duration: 0.85, ease: [0.16, 1, 0.3, 1] }}><em>last thing</em> we look at.</motion.span></span>
+              </h1>
+            </Reveal>
+            <Reveal delay={180}>
+              <p className="hero-sub">
+                Blind, ten-minute video interviews and live startup simulations — hiring runs on how
+                you think under pressure, not where you&apos;ve worked.
+              </p>
+            </Reveal>
+            <Reveal delay={270}>
+              <div className="hero-cta">
+                <button className="btn btn-primary btn-lg" onClick={() => go('candidate')}>Interview as a student</button>
+                <button className="btn btn-violet btn-lg" onClick={() => go('employer')}>Hire as a startup</button>
+              </div>
+              <div style={{ display: 'flex', gap: 10, marginTop: 22, flexWrap: 'wrap' }}>
+                <button className="btn btn-ghost btn-sm" onClick={() => instant('candidate')}><Zap size={13} /> Instant demo · student</button>
+                <button className="btn btn-ghost btn-sm" onClick={() => instant('employer')}><Zap size={13} /> Instant demo · startup</button>
+              </div>
+            </Reveal>
           </div>
 
-          <LiveMock />
+          <motion.div className="hero-mock-par" style={{ y: mockY }}><Reveal delay={150}><LiveMock /></Reveal></motion.div>
         </div>
 
         <div className="container">
@@ -81,26 +91,41 @@ export default function Landing() {
         </div>
       </header>
 
-      {/* ————— How it works ————— */}
+      {/* ————— Signal ticker ————— */}
+      <div className="ticker" aria-hidden>
+        <div className="ticker-track">
+          {[0, 1].map((copy) => (
+            <div className="ticker-group" key={copy}>
+              {['Potential before credentials', 'Live talent discovery', 'Ten minutes. Unscripted.', 'Verified in, verified out', 'Blind matches only'].map((t) => (
+                <span key={t}><i>●</i>{t}</span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ————— How it works (heading pins while the rows scroll past) ————— */}
       <section className="section" id="how">
-        <div className="container">
-          <div className="section-head center">
-            <span className="eyebrow center">The loop</span>
+        <div className="container how-grid">
+          <div className="how-head">
             <h2 className="display display-lg">Four moves, ten minutes.</h2>
             <p>No resume review, no phone screens, no waiting weeks. Every session follows the same honest loop.</p>
           </div>
-          <div className="steps-grid">
+          <div className="index-list">
             {[
-              ['Verify', 'Every account is reviewed by a human — government ID, face match, education, and a real company behind every employer.'],
-              ['Match blind', 'You pick your field, we pick the room. You know the role — never the company. No name bias in the first round.'],
-              ['Interview live', 'A ten-minute video session. The employer sets the scene, then it\u2019s unscripted — including on-the-spot startup simulations.'],
-              ['Resume at match', 'The moment you match, the startup receives your verified resume — then evaluates how you think, live, before unlocking your full profile.'],
-            ].map(([t, b], i) => (
-              <div className="step-card" key={t}>
-                <span className="step-num">{String(i + 1).padStart(2, '0')}</span>
-                <div className="title">{t}</div>
-                <p className="body">{b}</p>
-              </div>
+              ['01', 'Verify', 'Every account is reviewed by a human — government ID, face match, education, and a real company behind every employer.'],
+              ['02', 'Match blind', 'You pick your field, we pick the room. You know the role — never the company. No name bias in the first round.'],
+              ['03', 'Interview live', 'A ten-minute video session. The employer sets the scene, then it\u2019s unscripted — including on-the-spot startup simulations.'],
+              ['04', 'Resume at match', 'The moment you match, the startup receives your verified resume — then evaluates how you think, live, before unlocking your full profile.'],
+            ].map(([n, t, b], i) => (
+              <Reveal as="div" className="index-row" key={t} delay={i * 70}>
+                <span className="index-num">{n}</span>
+                <div className="index-main">
+                  <div className="index-title">{t}</div>
+                  <p className="index-body">{b}</p>
+                </div>
+                <span className="index-arrow"><ArrowUpRight size={16} /></span>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -118,14 +143,14 @@ export default function Landing() {
               disagrees, an investor who moves the deadline. That&apos;s the point.
             </p>
           </div>
-          <div className="sim-grid">
+          <div className="sim-bento">
             {[
-              [<Bug size={22} key="i" />, 'Debug a live bug', 'Software', 'A checkout handler that zeroes out totals "sometimes". Find it, fix it, defend it — out loud, on the clock.'],
+              [<Bug size={26} key="i" />, 'Debug a live bug', 'Software', 'A checkout handler that zeroes out totals "sometimes". Find it, fix it, defend it — out loud, on the clock.'],
               [<Target size={22} key="i" />, 'Sell the unknown', 'Sales', 'A product neither of you has heard of. Ninety seconds to make the first sale. No notes.'],
               [<Megaphone size={22} key="i" />, 'Launch blind', 'Marketing', '$40k, no brand awareness, one month. Build the campaign, split the budget, defend one metric.'],
               [<Coins size={22} key="i" />, 'The funding cut', 'Business', 'Funding dies in 30 days. Three initiatives, one budget. Rank them, then argue for what you cut.'],
             ].map(([icon, title, field, body], i) => (
-              <div className={`sim-card ${i % 2 ? 'ember' : ''}`} key={title}>
+              <Reveal as="div" className={`sim-card ${i === 0 ? 'sim-feature' : ''}`} key={title} dir={i === 0 ? 'zoom' : 'up'} delay={(i % 2) * 70}>
                 <div className="sim-icon">{icon}</div>
                 <div>
                   <span className="kicker">{field}</span>
@@ -137,7 +162,7 @@ export default function Landing() {
                     <span className="sim-tag">Unexpected twists</span>
                   </div>
                 </div>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -146,8 +171,7 @@ export default function Landing() {
       {/* ————— Collaboration ————— */}
       <section className="section" id="collab">
         <div className="container cols-2">
-          <div>
-            <span className="eyebrow">Collaboration sessions</span>
+          <Reveal>
             <h3 className="display display-md" style={{ margin: '14px 0 12px' }}>
               Stop talking about teamwork. Show it.
             </h3>
@@ -161,87 +185,77 @@ export default function Landing() {
                 <div className="row" key={t}><span className="tick"><Check size={13} /></span>{t}</div>
               ))}
             </div>
-          </div>
-          <div className="session-mock">
-            <div className="mock-bar">
-              <span className="live-dot" />
-              <span className="mock-live">COLLAB</span>
-              <span className="mock-timer">whiteboard · 02:41</span>
-            </div>
-            <div style={{ height: 260, background: '#100e0b', position: 'relative' }}>
-              <svg viewBox="0 0 400 260" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
-                <line x1="60" y1="200" x2="220" y2="120" stroke="rgba(255,92,58,.7)" strokeWidth="3" strokeLinecap="round" />
-                <line x1="220" y1="120" x2="330" y2="160" stroke="rgba(255,194,75,.8)" strokeWidth="3" strokeLinecap="round" strokeDasharray="6 5" />
-                <rect x="150" y="150" width="70" height="50" fill="none" stroke="rgba(79,209,165,.6)" strokeWidth="2" />
-                <circle cx="330" cy="160" r="6" fill="rgba(255,194,75,.9)" />
-                <text x="30" y="40" fill="rgba(242,237,228,.45)" fontSize="12" fontFamily="IBM Plex Mono, monospace">retention flow — sketch</text>
-                <text x="60" y="212" fill="rgba(242,237,228,.35)" fontSize="11" fontFamily="IBM Plex Mono, monospace">drop-off here?</text>
-              </svg>
-              <div style={{ position: 'absolute', left: 14, bottom: 12, fontFamily: 'IBM Plex Mono, monospace', fontSize: 11, color: 'rgba(242,237,228,.5)' }}>teammate is drawing…</div>
-            </div>
-          </div>
+          </Reveal>
+          <Reveal delay={120} dir="right"><CollabMock /></Reveal>
         </div>
       </section>
 
       {/* ————— Trust & safety ————— */}
       <section className="section" id="safety">
-        <div className="container cols-2">
-          <div className="band" style={{ margin: 0 }}>
-            <span className="eyebrow">Trust &amp; safety</span>
-            <h3>Verified in, verified out.</h3>
-            <p>A hiring room only works if every person in it is real. Catalyst layers verification at every step.</p>
-            <ul className="safety-list" style={{ marginTop: 22 }}>
-              {[
-                ['Government ID + facial match', 'Identity is checked against a live face scan, not a selfie upload.'],
-                ['Manual review on every account', 'A human reviews each candidate and each company before approval.'],
-                ['Employer authorization', 'Startups prove they exist and that the recruiter can actually hire.'],
-                ['AI-assisted moderation & reporting', 'Misconduct, impersonation, or harassment ends in suspension — fast.'],
-              ].map(([t, b]) => (
-                <li key={t}>
-                  <span className="ic"><Check size={12} /></span>
-                  <span><strong style={{ color: 'var(--text)', fontWeight: 500 }}>{t}</strong><br />{b}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <span className="eyebrow">Consent is a feature</span>
-            <h3 className="display display-md" style={{ margin: '14px 0 12px' }}>AI assists. It never decides.</h3>
-            <p className="muted" style={{ fontSize: '15px' }}>
-              With both participants&apos; explicit consent, sessions can be recorded and analyzed
-              to produce structured summaries — communication, adaptability, collaboration — that
-              support the human decision. Decline, and you get the same interview, with nothing
-              recorded.
-            </p>
-            <div className="consent-box">
-              {['Clear consent form before you ever join a session', 'Recording & AI analysis are always opt-in, per session', 'AI writes observations, never verdicts', 'Withdraw consent anytime the law allows'].map((t) => (
-                <div className="row" key={t}><span className="tick"><Check size={13} /></span>{t}</div>
-              ))}
+        <div className="container">
+          <Reveal className="band">
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.35fr', gap: 44, alignItems: 'center' }}>
+              <div>
+                <h3>Verified in, verified out.</h3>
+                <p>A hiring room only works if every person in it is real. Catalyst layers verification at every step.</p>
+              </div>
+              <div className="safety-grid">
+                {[
+                  [<Fingerprint size={18} key="i" />, 'Government ID + facial match', 'Identity is checked against a live face scan, not a selfie upload.'],
+                  [<Shield size={18} key="i" />, 'Manual review on every account', 'A human reviews each candidate and each company before approval.'],
+                  [<Building size={18} key="i" />, 'Employer authorization', 'Startups prove they exist and that the recruiter can actually hire.'],
+                  [<Warning size={18} key="i" />, 'Moderation & reporting', 'Impersonation, harassment, or misconduct ends in suspension — fast.'],
+                ].map(([icon, t, b], i) => (
+                  <Reveal as="div" className="safety-tile" key={t} dir="zoom" delay={i * 70}>
+                    <span className="st-icon">{icon}</span>
+                    <strong>{t}</strong>
+                    <span>{b}</span>
+                  </Reveal>
+                ))}
+              </div>
             </div>
-          </div>
+          </Reveal>
+
+          <Reveal className="band" delay={100} style={{ marginTop: 16 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.35fr', gap: 44, alignItems: 'center' }}>
+              <div>
+                <h3>AI assists. It never decides.</h3>
+                <p>
+                  With both participants&apos; explicit consent, sessions can be recorded and
+                  analyzed to produce structured summaries — communication, adaptability,
+                  collaboration — that support the human decision. Decline, and you get the same
+                  interview, with nothing recorded.
+                </p>
+              </div>
+              <div className="consent-box" style={{ marginTop: 0 }}>
+                {['Clear consent form before you ever join a session', 'Recording & AI analysis are always opt-in, per session', 'AI writes observations, never verdicts', 'Withdraw consent anytime the law allows'].map((t) => (
+                  <div className="row" key={t}><span className="tick"><Check size={13} /></span>{t}</div>
+                ))}
+              </div>
+            </div>
+          </Reveal>
         </div>
       </section>
 
       {/* ————— CTA ————— */}
-      <section className="section">
+      <section className="section" id="ai">
         <div className="container">
           <div className="section-head center" style={{ marginBottom: 30 }}>
-            <span className="eyebrow center">Join the room</span>
             <h2 className="display display-lg">Potential doesn&apos;t wait for an opening.</h2>
           </div>
           <div className="cta-grid">
-            <div className="cta-card cand">
+            <Reveal as="div" className="cta-card cand">
               <span className="role">For students</span>
               <h4>Get judged on how you think.</h4>
               <p>One verification. Real startups in your field. Practice under pressure with feedback that makes you a sharper interviewer.</p>
               <button className="btn btn-primary" onClick={() => go('candidate')}>Interview as a student</button>
-            </div>
-            <div className="cta-card startup">
+            </Reveal>
+            <Reveal as="div" className="cta-card startup" delay={100}>
               <span className="role">For startups</span>
               <h4>Hire the room, not the resume.</h4>
               <p>Meet adaptable, curious students who can actually handle ambiguity — ten minutes at a time, in your field, with zero noise.</p>
               <button className="btn btn-violet" onClick={() => go('employer')}>Hire as a startup</button>
-            </div>
+            </Reveal>
           </div>
         </div>
       </section>
@@ -259,12 +273,24 @@ export default function Landing() {
 /* ————— The hero signature: a live session, in miniature ————— */
 
 function LiveMock() {
+  /* the hero mock is a live session — the timer really ticks, the ring really drains */
+  const TOTAL = 4 * 60 + 12
+  const [secs, setSecs] = useState(TOTAL)
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const id = setInterval(() => setSecs((s) => (s <= 1 ? TOTAL : s - 1)), 1000)
+    return () => clearInterval(id)
+  }, [])
+  const mm = String(Math.floor(secs / 60)).padStart(2, '0')
+  const ss = String(secs % 60).padStart(2, '0')
+  const frac = secs / TOTAL
+
   return (
     <div className="session-mock" aria-hidden>
       <div className="mock-bar">
         <span className="live-dot" />
         <span className="mock-live">LIVE</span>
-        <span className="mock-timer">software intern · 04:12</span>
+        <span className="mock-timer">software intern · {mm}:{ss}</span>
       </div>
       <div className="mock-stage">
         <div className="mock-tile a">
@@ -281,9 +307,9 @@ function LiveMock() {
         <div className="mock-ring">
           <svg viewBox="0 0 100 100">
             <circle className="ring-bg" cx="50" cy="50" r="46" />
-            <circle className="ring-fg" cx="50" cy="50" r="46" />
+            <circle className="ring-fg" cx="50" cy="50" r="46" style={{ strokeDashoffset: 100 * (1 - frac) }} />
           </svg>
-          <div className="num">4:12</div>
+          <div className="num">{mm}:{ss}</div>
         </div>
         <span className="mock-phase">unscripted</span>
       </div>
@@ -294,6 +320,31 @@ function LiveMock() {
           <div className="s">The founder wants to see how you adapt, live.</div>
         </div>
         <span className="cta">ADAPT →</span>
+      </div>
+    </div>
+  )
+}
+
+/* ————— The whiteboard collaboration preview ————— */
+
+function CollabMock() {
+  return (
+    <div className="session-mock">
+      <div className="mock-bar">
+        <span className="live-dot" />
+        <span className="mock-live">COLLAB</span>
+        <span className="mock-timer">whiteboard · 02:41</span>
+      </div>
+      <div style={{ height: 260, background: '#000000', position: 'relative' }}>
+        <svg viewBox="0 0 400 260" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
+          <line x1="60" y1="200" x2="220" y2="120" stroke="rgba(95,237,131,.7)" strokeWidth="3" strokeLinecap="round" />
+          <line x1="220" y1="120" x2="330" y2="160" stroke="rgba(210,153,34,.8)" strokeWidth="3" strokeLinecap="round" strokeDasharray="6 5" />
+          <rect x="150" y="150" width="70" height="50" fill="none" stroke="rgba(63,185,80,.6)" strokeWidth="2" />
+          <circle cx="330" cy="160" r="6" fill="rgba(210,153,34,.9)" />
+          <text x="30" y="40" fill="rgba(255,255,255,.45)" fontSize="12" fontFamily="IBM Plex Mono, monospace">retention flow — sketch</text>
+          <text x="60" y="212" fill="rgba(255,255,255,.35)" fontSize="11" fontFamily="IBM Plex Mono, monospace">drop-off here?</text>
+        </svg>
+        <div style={{ position: 'absolute', left: 14, bottom: 12, fontFamily: 'IBM Plex Mono, monospace', fontSize: 11, color: 'rgba(255,255,255,.5)' }}>teammate is drawing…</div>
       </div>
     </div>
   )

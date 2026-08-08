@@ -148,7 +148,7 @@ export default function PostSession() {
                   <h3>Session summary</h3>
                   <div className="ai-sub">AI ASSISTANT · observations only · no hiring decision</div>
                 </div>
-                <div className="ai-note">Generated from the consented recording · 5-min session</div>
+                <div className="ai-note">Generated from the consented recording · 10-min session</div>
               </div>
               <p style={{ fontSize: 14.5, color: 'var(--text)', lineHeight: 1.6, marginBottom: 20 }}>{summary.headline}</p>
               <div className="ai-dim-grid">

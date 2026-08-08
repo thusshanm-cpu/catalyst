@@ -3,7 +3,7 @@ import { useStore } from '../store.jsx'
 import { useToast } from '../toast.jsx'
 import { Match } from '../match.js'
 import { CANDIDATE_QUEUE, CANDIDATES, EMPLOYER_QUEUE, STARTUPS, fieldLabel, SIMULATIONS } from '../data.js'
-import { FIELD_ICONS, SIM_ICONS, Compass, Spark } from '../components/icons.jsx'
+import { FIELD_ICONS, SIM_ICONS, Calendar, Compass, Spark } from '../components/icons.jsx'
 
 /* the candidate's verified profile as a shareable resume snapshot */
 const resumeOf = (u) => ({
@@ -148,7 +148,7 @@ export default function Dashboard() {
         {presence.length > 0 && (
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 18 }}>
             {presence.map((p) => (
-              <span key={p.role + p.field} className="sim-tag" style={{ color: 'var(--ember-soft)', borderColor: 'rgba(255,92,58,.4)', background: 'rgba(255,92,58,.06)' }}>
+              <span key={p.role + p.field} className="sim-tag" style={{ color: 'var(--ember-soft)', borderColor: 'rgba(95,237,131,.4)', background: 'rgba(95,237,131,.06)' }}>
                 <span className="live-dot" style={{ display: 'inline-block', marginRight: 6, width: 7, height: 7 }} />
                 {p.count} verified {p.role === 'candidate' ? 'student' : 'startup'} live in {fieldLabel(p.field)}
               </span>
@@ -220,7 +220,7 @@ export default function Dashboard() {
                 </p>
                 <div className="queue-list">
                   {(SIMULATIONS[mainField] || SIMULATIONS.software).map((s) => (
-                    <button key={s.id} className="queue-item" onClick={() => { toast('Practice launches from a live session — start a match', '💡') }}>
+                    <button key={s.id} className="queue-item" onClick={() => { toast(`${s.title} — starting your blind match`, '🎯'); start(mainField, 'Intern') }}>
                       <span className="q-icon">{(() => { const Ic = SIM_ICONS[s.id] || Spark; return <Ic size={18} /> })()}</span>
                       <span>
                         <span className="q-title">{s.title}</span>
@@ -238,10 +238,7 @@ export default function Dashboard() {
           <div>
             <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 15, fontWeight: 600, marginBottom: 12 }}>Session history</h3>
             <div className="card" style={{ padding: '8px 20px' }}>
-              {(state.history.length ? state.history : [
-                { role: 'Software Engineering', roleType: 'Intern', counterpart: isCandidate ? 'Loopback' : 'Maya Chen', when: '2:14 PM', decision: 'saved' },
-                { role: 'Business', roleType: 'Associate', counterpart: isCandidate ? 'Fern & Flux' : 'Jonas Okafor', when: '11:02 AM', decision: 'skipped' },
-              ]).map((h) => {
+              {state.history.length ? state.history.map((h) => {
                 const s = histStatus[h.decision] || histStatus.skipped
                 return (
                   <div className="hist-item" key={h.id || h.counterpart + h.when}>
@@ -252,9 +249,12 @@ export default function Dashboard() {
                     <span className={`hist-status ${s.c}`}>{s.t}</span>
                   </div>
                 )
-              })}
-              {!state.history.length && (
-                <p className="text-3" style={{ fontSize: 12.5, padding: '10px 0' }}>Your sessions will appear here.</p>
+              }) : (
+                <div className="empty-state">
+                  <span className="empty-ic"><Calendar size={17} /></span>
+                  <strong>No sessions yet</strong>
+                  <span>Your first blind match lands here — start one above.</span>
+                </div>
               )}
             </div>
 

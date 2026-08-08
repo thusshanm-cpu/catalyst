@@ -49,7 +49,7 @@ export default function Onboarding() {
       idName: 'driver_license.jpg',
       emailCode: '482913',
       emailVerified: true,
-      facePhoto: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="24" r="14" fill="%23ff5c3a"/><path d="M10 58c2-16 44-16 44 0z" fill="%23ff8a5c"/></svg>',
+      facePhoto: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="24" r="14" fill="%238c93fb"/><path d="M10 58c2-16 44-16 44 0z" fill="%23818b98"/></svg>',
     }))
     toast('Demo data filled — just click Continue', '⚡')
   }

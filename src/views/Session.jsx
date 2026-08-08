@@ -178,7 +178,7 @@ export default function Session() {
           {phase === 'connecting' ? 'matching' : phase === 'countdown' ? 'hold tight' : inIntro ? 'intro · employer sets the scene' : 'unscripted'}
         </span>
         {real
-          ? <span className="st-phase" style={{ color: peerOnline ? 'var(--mint)' : 'var(--amber)', borderColor: peerOnline ? 'rgba(79,209,165,.4)' : 'rgba(255,194,75,.4)', background: peerOnline ? 'rgba(79,209,165,.08)' : 'rgba(255,194,75,.08)' }}>{peerOnline ? 'PEER LIVE' : 'PEER LEFT'}</span>
+          ? <span className="st-phase" style={{ color: peerOnline ? 'var(--mint)' : 'var(--amber)', borderColor: peerOnline ? 'rgba(63,185,80,.4)' : 'rgba(210,153,34,.4)', background: peerOnline ? 'rgba(63,185,80,.08)' : 'rgba(210,153,34,.08)' }}>{peerOnline ? 'PEER LIVE' : 'PEER LEFT'}</span>
           : <span className="st-phase" style={{ color: 'var(--text-2)', borderColor: 'var(--line-strong)', background: 'transparent' }}>DEMO MATCH</span>}
         <span className="st-spacer" />
         <span className="st-timer" style={{ color: remain < 30 && isLive ? 'var(--danger)' : 'var(--text)' }}>{fmt(remain)}</span>
@@ -751,7 +751,7 @@ function Whiteboard({ relay = false }) {
   const remoteLive = useRef(null) // in-progress stroke from the peer
   const recentStrokes = useRef([]) // last N strokes, for re-sync when the peer's board opens
   const peerDrawTimer = useRef(null)
-  const [color, setColor] = useState('#ff5c3a')
+  const [color, setColor] = useState('#ffffff')
   const [tool, setTool] = useState('pen')
   const [teammateTimer, setTeammateTimer] = useState(false)
   const [peerDrawing, setPeerDrawing] = useState(false)
@@ -852,7 +852,7 @@ function Whiteboard({ relay = false }) {
       const ctx = ctxRef.current
       if (!c || !ctx) return
       const stroke = {
-        id: strokeId(), color: '#ffc24b', tool: 'pen', width: 3,
+        id: strokeId(), color: '#cccccc', tool: 'pen', width: 3,
         pts: Array.from({ length: 22 }, (_, i) => ({
           x: 60 + i * 9 + Math.random() * 6,
           y: 40 + Math.sin(i / 3) * 26 + Math.random() * 10,
@@ -901,7 +901,7 @@ function Whiteboard({ relay = false }) {
       <div className="wb-toolbar">
         <span className="mono" style={{ fontSize: 11, letterSpacing: '0.14em', color: 'var(--text-3)', textTransform: 'uppercase' }}>Shared whiteboard</span>
         <div style={{ flex: 1 }} />
-        {['#ff5c3a', '#ff8a5c', '#4fd1a5', '#ffc24b', '#f2ede4'].map((c) => (
+        {['#5fed83', '#8dd6ff', '#8c93fb', '#d29922', '#ffffff'].map((c) => (
           <button key={c} className={`wb-tool ${color === c && tool !== 'eraser' ? 'on' : ''}`}
             onClick={() => { setColor(c); setTool('pen') }}
             style={{ background: c, borderColor: color === c ? 'var(--text)' : 'var(--line)', borderRadius: '50%', width: 26, height: 26 }} />
@@ -920,7 +920,7 @@ function Whiteboard({ relay = false }) {
           onPointerLeave={up}
         />
         {(peerDrawing || teammateTimer) && (
-          <div style={{ position: 'absolute', left: 14, bottom: 14, fontFamily: 'var(--font-mono)', fontSize: 11, color: peerDrawing ? 'rgba(79,209,165,.85)' : 'rgba(255,92,58,.85)' }}>
+          <div style={{ position: 'absolute', left: 14, bottom: 14, fontFamily: 'var(--font-mono)', fontSize: 11, color: peerDrawing ? 'rgba(63,185,80,.85)' : 'rgba(95,237,131,.85)' }}>
             {peerDrawing ? 'peer is drawing…' : 'teammate is sketching an alternative…'}
           </div>
         )}
