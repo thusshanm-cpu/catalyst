@@ -237,6 +237,18 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* ————— Demo reel — the whole flow, self-playing ————— */}
+      <section className="section" id="demo">
+        <div className="container">
+          <div className="section-head">
+            <span className="eyebrow">Watch it run</span>
+            <h2 className="display display-lg">The whole demo, in sixty seconds.</h2>
+            <p>One loop, straight through the product — match, interview, whiteboard, simulation, decide. Press play.</p>
+          </div>
+          <Reveal dir="zoom"><DemoReel /></Reveal>
+        </div>
+      </section>
+
       {/* ————— CTA ————— */}
       <section className="section" id="ai">
         <div className="container">
@@ -266,6 +278,204 @@ export default function Landing() {
           <div className="small">Prototype for the hackathon — every flow is simulated, no real data is stored.</div>
         </div>
       </footer>
+    </div>
+  )
+}
+
+/* ————— Demo reel — a self-playing walkthrough of the whole flow ————— */
+
+const REEL_STEPS = [
+  ['Radar match', 'Your field, never the company.'],
+  ['Live interview', 'The employer sets the scene, then it\u2019s unscripted.'],
+  ['Shared whiteboard', 'Sketch, rank, and build together in real time.'],
+  ['Startup simulation', 'Adapt when the rules change mid-session.'],
+  ['Decide & learn', 'Continue, follow up, or read the AI summary.'],
+]
+
+function DemoReel() {
+  const reduce = useReducedMotion()
+  const [playing, setPlaying] = useState(!reduce)
+  /* scene 2 shows a real ticking timer, frozen while paused */
+  const [secs, setSecs] = useState(9 * 60 + 41)
+  useEffect(() => {
+    if (!playing) return
+    const id = setInterval(() => setSecs((s) => (s <= 1 ? 9 * 60 + 41 : s - 1)), 1000)
+    return () => clearInterval(id)
+  }, [playing])
+  const mm = String(Math.floor(secs / 60)).padStart(2, '0')
+  const ss = String(secs % 60).padStart(2, '0')
+
+  if (reduce) {
+    /* reduced motion: a static first frame, controls still explain the loop */
+    return (
+      <div className="reel-frame">
+        <div className="reel-chrome">
+          <span className="rc-dots"><i /><i /><i /></span>
+          <span className="rc-url">catalyst.live — live demo</span>
+          <span className="rc-tag">LOOP · 60s</span>
+        </div>
+        <div className="reel-stage"><ReelScene1 /></div>
+        <div className="reel-bar"><span className="rb-cap">Radar match — your field, never the company.</span></div>
+      </div>
+    )
+  }
+
+  return (
+    <div className={`reel-frame ${playing ? '' : 'paused'}`}>
+      <div className="reel-chrome">
+        <span className="rc-dots"><i /><i /><i /></span>
+        <span className="rc-url">catalyst.live — live demo</span>
+        <button className="rc-play" onClick={() => setPlaying((p) => !p)} aria-label={playing ? 'Pause demo' : 'Play demo'}>
+          {playing ? <PauseGlyph /> : <PlayGlyph />}
+        </button>
+        <span className="rc-tag">LOOP · 60s</span>
+      </div>
+      <div className="reel-stage" onClick={() => setPlaying((p) => !p)}>
+        <div className="reel-scene rs-1"><ReelScene1 /></div>
+        <div className="reel-scene rs-2"><ReelScene2 mm={mm} ss={ss} /></div>
+        <div className="reel-scene rs-3"><ReelScene3 /></div>
+        <div className="reel-scene rs-4"><ReelScene4 /></div>
+        <div className="reel-scene rs-5"><ReelScene5 /></div>
+        <div className={`reel-play-hint ${playing ? 'on' : ''}`}>{playing ? '❚❚ tap to pause' : '▶ tap to play'}</div>
+      </div>
+      <div className="reel-bar">
+        <div className="reel-progress"><span className="rp-fill" /></div>
+        <div className="reel-dots">
+          {REEL_STEPS.map(([t], i) => (
+            <span key={t} className={`reel-dot rd-${i + 1}`} aria-label={t} />
+          ))}
+        </div>
+        <div className="reel-captions">
+          {REEL_STEPS.map(([t, s], i) => (
+            <span key={t} className={`reel-caption rc-${i + 1}`}><b>{t}</b> · {s}</span>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function PlayGlyph() {
+  return (
+    <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden>
+      <path d="M2.5 1.5v9l7-4.5z" fill="currentColor" />
+    </svg>
+  )
+}
+function PauseGlyph() {
+  return (
+    <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden>
+      <rect x="2" y="1.5" width="2.8" height="9" fill="currentColor" />
+      <rect x="7.2" y="1.5" width="2.8" height="9" fill="currentColor" />
+    </svg>
+  )
+}
+
+/* scene 1 — matchmaking radar */
+function ReelScene1() {
+  return (
+    <div className="reel-mid">
+      <div className="rr-rings">
+        <div className="rr-ring" /><div className="rr-ring" /><div className="rr-ring" />
+        <div className="rr-core" />
+        <div className="rr-sweep" />
+      </div>
+      <div className="reel-mid-copy">
+        <h4>Finding your blind match</h4>
+        <p>They see the role: <b>Software Engineering</b>. Nothing else about you.</p>
+        <div className="reel-log">
+          <span>scanning verified room · field: software</span>
+          <span>secure link established</span>
+          <span className="ok">MATCHED — Helios Robotics, blind</span>
+        </div>
+      </div>
+      <span className="reel-chip chip-in">✓ VERIFIED BOTH SIDES</span>
+    </div>
+  )
+}
+
+/* scene 2 — live session */
+function ReelScene2({ mm, ss }) {
+  return (
+    <div className="reel-live">
+      <div className="rl-tile a"><span className="mono-tile">HR</span><span className="rl-tag">Founder · Helios Robotics</span></div>
+      <div className="rl-tile b"><span className="mono-tile you">YOU</span><span className="rl-tag you">You · camera on</span></div>
+      <div className="rl-top">
+        <span className="live-dot" /><span className="rl-live">LIVE</span>
+        <span className="rl-timer mono">{mm}:{ss} left</span>
+      </div>
+      <div className="rl-scenario pop">
+        <span className="rl-z">⚡</span>
+        <div>
+          <b>Scenario incoming — the investor just changed the requirements.</b>
+          <span>The founder wants to see how you adapt, live.</span>
+        </div>
+        <span className="rl-adapt">ADAPT →</span>
+      </div>
+    </div>
+  )
+}
+
+/* scene 3 — shared whiteboard */
+function ReelScene3() {
+  return (
+    <div className="reel-board">
+      <svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice">
+        <line className="draw d1" x1="40" y1="150" x2="150" y2="90" />
+        <line className="draw d2" x1="150" y1="90" x2="240" y2="120" />
+        <rect className="draw d3" x="120" y="110" width="70" height="50" />
+        <circle className="draw d4" cx="280" cy="100" r="26" />
+        <text x="24" y="32" className="rb-label">retention flow — sketch</text>
+        <text x="150" y="185" className="rb-label dim">drop-off here?</text>
+      </svg>
+      <div className="rb-peer">
+        <span className="rb-cursor" /><span>teammate is drawing…</span>
+      </div>
+      <div className="rb-toolbar">
+        {['✏️', '▭', '◯', '🧹'].map((t, i) => <span key={i} className={`rb-tool ${i === 0 ? 'active' : ''}`}>{t}</span>)}
+      </div>
+    </div>
+  )
+}
+
+/* scene 4 — startup simulation */
+function ReelScene4() {
+  return (
+    <div className="reel-sim">
+      <div className="rsim-head">
+        <span className="rsim-tag">SIMULATION · DEBUGGING · 90s</span>
+        <span className="rsim-timer mono">01:27</span>
+      </div>
+      <div className="rsim-body">
+        <p className="rsim-task">Checkout totals zero out &quot;sometimes&quot;. Find the bug.</p>
+        <pre className="rsim-code mono">{`const total = items
+  .map((i) => i.price * i.qty)
+  .reduce((a, b) => a + b, 0)`}
+        </pre>
+        <div className="rsim-answer pop">
+          <b>Found it</b> — the map callback returns a string. <span className="mono">+Number()</span>
+        </div>
+      </div>
+      <span className="reel-chip chip-in ok">✓ FIX SUBMITTED · 38s left</span>
+    </div>
+  )
+}
+
+/* scene 5 — decide + AI summary */
+function ReelScene5() {
+  return (
+    <div className="reel-decide">
+      <div className="rdec-cards">
+        {['Keep talking', 'Request follow-up', 'Save connection', 'Skip to next match'].map((t, i) => (
+          <span key={t} className={`rdec-card c${i + 1}`}>{t}</span>
+        ))}
+      </div>
+      <div className="rdec-ai pop">
+        <span className="rdec-ai-tag">AI SUMMARY · CONSENT ON</span>
+        <div className="rdec-ai-row"><span>Communication</span><i><b style={{ width: '88%' }} /></i></div>
+        <div className="rdec-ai-row"><span>Adaptability</span><i><b style={{ width: '76%' }} /></i></div>
+        <div className="rdec-ai-row"><span>Problem-solving</span><i><b style={{ width: '92%' }} /></i></div>
+      </div>
     </div>
   )
 }
