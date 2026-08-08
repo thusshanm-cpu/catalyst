@@ -1,6 +1,6 @@
 import { useStore } from '../store.jsx'
 import { CANDIDATES, fieldLabel } from '../data.js'
-import { Check } from '../components/icons.jsx'
+import { Check, Unlock } from '../components/icons.jsx'
 
 export default function Profile() {
   const { state, api } = useStore()
@@ -45,7 +45,7 @@ export default function Profile() {
 
         {isEmployer && (
           <div className="lock-banner" style={{ marginTop: 18 }}>
-            <span className="lock">🔓</span>
+            <span className="lock"><Unlock size={18} /></span>
             <span>
               <strong style={{ color: 'var(--text)' }}>Profile unlocked.</strong> Their verified resume
               arrived the moment you matched — this full profile (portfolio, GitHub, credentials)

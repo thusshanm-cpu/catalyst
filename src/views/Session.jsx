@@ -3,7 +3,7 @@ import { useStore } from '../store.jsx'
 import { useToast } from '../toast.jsx'
 import { Match } from '../match.js'
 import { SIMULATIONS, EVENTS, fieldLabel } from '../data.js'
-import { Mic, Pencil, Eraser, Trash } from '../components/icons.jsx'
+import { Mic, Pencil, Eraser, Trash, Zap, FileText, X, Spark, SIM_ICONS } from '../components/icons.jsx'
 
 const fmt = (sec) => `${String(Math.floor(sec / 60)).padStart(2, '0')}:${String(sec % 60).padStart(2, '0')}`
 
@@ -198,7 +198,7 @@ export default function Session() {
             <>
               <div className="video-main">
                 <div className="counterpart-art">
-                  <div className="big-orb" />
+                  <div className="big-orb"><span>{s.counterpart.name.split(' ').map((w) => w[0]).join('').slice(0, 2)}</span></div>
                   <div className="cp-name">{s.counterpart.name}</div>
                   <div className="cp-role">{s.counterpart.title}{s.counterpart.org ? ` · ${s.counterpart.org}` : ''}</div>
                   {isLive && !inIntro && !activeSim && !activeEvent && (
@@ -279,7 +279,7 @@ export default function Session() {
                     </div>
                   </div>
                   {s.counterpart.resume.resumeName && (
-                    <div className="rr-file">📄 {s.counterpart.resume.resumeName} · verified on Catalyst</div>
+                    <div className="rr-file" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><FileText size={13} /> {s.counterpart.resume.resumeName} · verified on Catalyst</div>
                   )}
                   <ul className="rr-bullets">
                     {(s.counterpart.resume.bullets || []).slice(0, 3).map((b) => <li key={b}>{b}</li>)}
@@ -306,7 +306,7 @@ export default function Session() {
                 <div className="sim-picker">
                   {(SIMULATIONS[s.field] || SIMULATIONS.software).map((sim) => (
                     <button key={sim.id} className={`sim-opt ${activeSim?.id === sim.id ? 'armed' : ''}`} onClick={() => launchSim(sim.id)}>
-                      <span className="so-icon">{sim.id === 'debug' ? '🐛' : sim.id === 'system' ? '🏛️' : sim.id === 'pitch' ? '🎤' : sim.id === 'campaign' ? '📣' : sim.id === 'funding' ? '🧮' : '🎨'}</span>
+                      <span className="so-icon">{(() => { const Ic = SIM_ICONS[sim.id] || Spark; return <Ic size={16} /> })()}</span>
                       <span>
                         <span className="so-title" style={{ display: 'block' }}>{sim.title}</span>
                         <span className="so-sub">{sim.kicker}</span>
@@ -336,7 +336,7 @@ export default function Session() {
                 <p className="session-notes" style={{ marginBottom: 12 }}>
                   Throw a curveball to see how the candidate adapts.
                 </p>
-                <button className="btn btn-ghost" style={{ width: '100%' }} onClick={fireEvent}>⚡ Send an unexpected change</button>
+                <button className="btn btn-ghost" style={{ width: '100%' }} onClick={fireEvent}><Zap size={14} /> Send an unexpected change</button>
               </div>
               <div className="rail-card">
                 <h4>Collaboration</h4>
@@ -478,7 +478,7 @@ function SimOverlay({ sim, field, isCandidate, real = false, lastAnswer, demo, o
         <span className="sh-tag">STARTUP SIMULATION · {fieldLabel(field).toUpperCase()}</span>
         <h3>{sim.title}</h3>
         {!isCandidate && <span className="text-3" style={{ fontSize: 11.5, fontFamily: 'var(--font-mono)' }}>observing as employer</span>}
-        <button className="btn btn-quiet btn-sm" style={{ marginLeft: 'auto' }} onClick={onClose}>Close ✕</button>
+        <button className="btn btn-quiet btn-sm" style={{ marginLeft: 'auto' }} onClick={onClose}>Close <X size={12} /></button>
       </div>
       <div className="sim-body">
         <p className="sim-brief"><span className="kicker">{sim.kicker}</span>{sim.brief}</p>
@@ -852,7 +852,7 @@ function Whiteboard({ relay = false }) {
       const ctx = ctxRef.current
       if (!c || !ctx) return
       const stroke = {
-        id: strokeId(), color: '#8b7cff', tool: 'pen', width: 3,
+        id: strokeId(), color: '#ffc24b', tool: 'pen', width: 3,
         pts: Array.from({ length: 22 }, (_, i) => ({
           x: 60 + i * 9 + Math.random() * 6,
           y: 40 + Math.sin(i / 3) * 26 + Math.random() * 10,
@@ -901,7 +901,7 @@ function Whiteboard({ relay = false }) {
       <div className="wb-toolbar">
         <span className="mono" style={{ fontSize: 11, letterSpacing: '0.14em', color: 'var(--text-3)', textTransform: 'uppercase' }}>Shared whiteboard</span>
         <div style={{ flex: 1 }} />
-        {['#ff5c3a', '#8b7cff', '#4fd1a5', '#ffc24b', '#f2ede4'].map((c) => (
+        {['#ff5c3a', '#ff8a5c', '#4fd1a5', '#ffc24b', '#f2ede4'].map((c) => (
           <button key={c} className={`wb-tool ${color === c && tool !== 'eraser' ? 'on' : ''}`}
             onClick={() => { setColor(c); setTool('pen') }}
             style={{ background: c, borderColor: color === c ? 'var(--text)' : 'var(--line)', borderRadius: '50%', width: 26, height: 26 }} />
@@ -920,7 +920,7 @@ function Whiteboard({ relay = false }) {
           onPointerLeave={up}
         />
         {(peerDrawing || teammateTimer) && (
-          <div style={{ position: 'absolute', left: 14, bottom: 14, fontFamily: 'var(--font-mono)', fontSize: 11, color: peerDrawing ? 'rgba(79,209,165,.85)' : 'rgba(139,124,255,.85)' }}>
+          <div style={{ position: 'absolute', left: 14, bottom: 14, fontFamily: 'var(--font-mono)', fontSize: 11, color: peerDrawing ? 'rgba(79,209,165,.85)' : 'rgba(255,92,58,.85)' }}>
             {peerDrawing ? 'peer is drawing…' : 'teammate is sketching an alternative…'}
           </div>
         )}

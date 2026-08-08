@@ -1,6 +1,24 @@
 import React, { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react'
+import { Check, Zap, AlertTriangle, Link, Spark, Pencil, Target, X, Unlock, ArrowRight } from './components/icons.jsx'
 
 const ToastContext = createContext(null)
+
+/* toast icons are passed as legacy emoji keys — render crisp SVGs instead */
+const TOAST_ICONS = {
+  '⚡': Zap,
+  '⚠️': AlertTriangle,
+  '⚠': AlertTriangle,
+  '🔗': Link,
+  '🎭': Spark,
+  '💡': Spark,
+  '📝': Pencil,
+  '🎯': Target,
+  '✕': X,
+  '✖': X,
+  '🔓': Unlock,
+  '↪': ArrowRight,
+  '✓': Check,
+}
 
 export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([])
@@ -20,7 +38,7 @@ export function ToastProvider({ children }) {
       <div className="toast-wrap">
         {toasts.map((t) => (
           <div key={t.id} className="toast">
-            <span className="t-ic">{t.icon}</span>
+            <span className="t-ic">{(() => { const Ic = TOAST_ICONS[t.icon] || null; return Ic ? <Ic size={15} /> : <span style={{ fontSize: 15 }}>{t.icon}</span> })()}</span>
             <span>{t.message}</span>
           </div>
         ))}

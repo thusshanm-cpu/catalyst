@@ -1,7 +1,7 @@
 import { useStore } from '../store.jsx'
 import { useToast } from '../toast.jsx'
 import { DEMO_PROFILES } from '../data.js'
-import { Check } from '../components/icons.jsx'
+import { Check, Zap, Bug, Target, Megaphone, Coins } from '../components/icons.jsx'
 
 export default function Landing() {
   const { api } = useStore()
@@ -25,7 +25,7 @@ export default function Landing() {
               <rect width="32" height="32" rx="9" fill="none" stroke="rgba(242,237,228,.25)" />
               <circle cx="14" cy="16" r="5" fill="#FF5C3A" />
               <circle cx="22" cy="10" r="3" fill="#FF8A5C" />
-              <circle cx="22" cy="22" r="3" fill="#8B7CFF" />
+              <circle cx="22" cy="22" r="3" fill="#4FD1A5" />
             </svg>
             Catalyst
           </div>
@@ -64,8 +64,8 @@ export default function Landing() {
               You only see the role, never the company
             </p>
             <div style={{ display: 'flex', gap: 10, marginTop: 26, flexWrap: 'wrap' }}>
-              <button className="btn btn-ghost btn-sm" onClick={() => instant('candidate')}>⚡ Instant demo · student</button>
-              <button className="btn btn-ghost btn-sm" onClick={() => instant('employer')}>⚡ Instant demo · startup</button>
+              <button className="btn btn-ghost btn-sm" onClick={() => instant('candidate')}><Zap size={13} /> Instant demo · student</button>
+              <button className="btn btn-ghost btn-sm" onClick={() => instant('employer')}><Zap size={13} /> Instant demo · startup</button>
             </div>
           </div>
 
@@ -120,10 +120,10 @@ export default function Landing() {
           </div>
           <div className="sim-grid">
             {[
-              ['⚙️', 'Debug a live bug', 'Software', 'A checkout handler that zeroes out totals "sometimes". Find it, fix it, defend it — out loud, on the clock.'],
-              ['🤝', 'Sell the unknown', 'Sales', 'A product neither of you has heard of. Ninety seconds to make the first sale. No notes.'],
-              ['📣', 'Launch blind', 'Marketing', '$40k, no brand awareness, one month. Build the campaign, split the budget, defend one metric.'],
-              ['🧮', 'The funding cut', 'Business', 'Funding dies in 30 days. Three initiatives, one budget. Rank them, then argue for what you cut.'],
+              [<Bug size={22} key="i" />, 'Debug a live bug', 'Software', 'A checkout handler that zeroes out totals "sometimes". Find it, fix it, defend it — out loud, on the clock.'],
+              [<Target size={22} key="i" />, 'Sell the unknown', 'Sales', 'A product neither of you has heard of. Ninety seconds to make the first sale. No notes.'],
+              [<Megaphone size={22} key="i" />, 'Launch blind', 'Marketing', '$40k, no brand awareness, one month. Build the campaign, split the budget, defend one metric.'],
+              [<Coins size={22} key="i" />, 'The funding cut', 'Business', 'Funding dies in 30 days. Three initiatives, one budget. Rank them, then argue for what you cut.'],
             ].map(([icon, title, field, body], i) => (
               <div className={`sim-card ${i % 2 ? 'ember' : ''}`} key={title}>
                 <div className="sim-icon">{icon}</div>
@@ -171,9 +171,9 @@ export default function Landing() {
             <div style={{ height: 260, background: '#100e0b', position: 'relative' }}>
               <svg viewBox="0 0 400 260" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
                 <line x1="60" y1="200" x2="220" y2="120" stroke="rgba(255,92,58,.7)" strokeWidth="3" strokeLinecap="round" />
-                <line x1="220" y1="120" x2="330" y2="160" stroke="rgba(139,124,255,.7)" strokeWidth="3" strokeLinecap="round" strokeDasharray="6 5" />
+                <line x1="220" y1="120" x2="330" y2="160" stroke="rgba(255,194,75,.8)" strokeWidth="3" strokeLinecap="round" strokeDasharray="6 5" />
                 <rect x="150" y="150" width="70" height="50" fill="none" stroke="rgba(79,209,165,.6)" strokeWidth="2" />
-                <circle cx="330" cy="160" r="6" fill="rgba(139,124,255,.8)" />
+                <circle cx="330" cy="160" r="6" fill="rgba(255,194,75,.9)" />
                 <text x="30" y="40" fill="rgba(242,237,228,.45)" fontSize="12" fontFamily="IBM Plex Mono, monospace">retention flow — sketch</text>
                 <text x="60" y="212" fill="rgba(242,237,228,.35)" fontSize="11" fontFamily="IBM Plex Mono, monospace">drop-off here?</text>
               </svg>
@@ -198,7 +198,7 @@ export default function Landing() {
                 ['AI-assisted moderation & reporting', 'Misconduct, impersonation, or harassment ends in suspension — fast.'],
               ].map(([t, b]) => (
                 <li key={t}>
-                  <span className="ic">✓</span>
+                  <span className="ic"><Check size={12} /></span>
                   <span><strong style={{ color: 'var(--text)', fontWeight: 500 }}>{t}</strong><br />{b}</span>
                 </li>
               ))}
@@ -268,14 +268,14 @@ function LiveMock() {
       </div>
       <div className="mock-stage">
         <div className="mock-tile a">
-          <div className="tile-art"><div className="orb violet" /></div>
+          <div className="tile-art"><div className="mono-tile"><span>HR</span></div></div>
           <div className="tile-tag">
             <span>Founder</span>
             <span className="small">· Helios Robotics</span>
           </div>
         </div>
         <div className="mock-tile b">
-          <div className="tile-art"><div className="orb ember" /></div>
+          <div className="tile-art"><div className="mono-tile you"><span>YOU</span></div></div>
           <div className="tile-tag you"><span>You</span></div>
         </div>
         <div className="mock-ring">
@@ -288,7 +288,7 @@ function LiveMock() {
         <span className="mock-phase">unscripted</span>
       </div>
       <div className="mock-scenario">
-        <div className="icon">⚡</div>
+        <div className="icon"><Zap size={16} /></div>
         <div>
           <div className="t">Scenario incoming — the investor just changed the requirements.</div>
           <div className="s">The founder wants to see how you adapt, live.</div>

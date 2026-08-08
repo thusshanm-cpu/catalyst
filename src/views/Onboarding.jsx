@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useStore } from '../store.jsx'
 import { useToast } from '../toast.jsx'
 import { FIELDS, DEMO_PROFILES } from '../data.js'
+import { Zap, FileText, IdCard, Mail, FIELD_ICONS, Spark } from '../components/icons.jsx'
 
 const REVIEW_STEPS = [
   ['Government ID review', 'Documents match the applicant record'],
@@ -48,7 +49,7 @@ export default function Onboarding() {
       idName: 'driver_license.jpg',
       emailCode: '482913',
       emailVerified: true,
-      facePhoto: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="24" r="14" fill="%238b7cff"/><path d="M10 58c2-16 44-16 44 0z" fill="%23ff5c3a"/></svg>',
+      facePhoto: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="24" r="14" fill="%23ff5c3a"/><path d="M10 58c2-16 44-16 44 0z" fill="%23ff8a5c"/></svg>',
     }))
     toast('Demo data filled — just click Continue', '⚡')
   }
@@ -123,7 +124,7 @@ export default function Onboarding() {
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 14 }}>
-            <button className="btn btn-ghost btn-sm" onClick={prefill}>⚡ Pre-fill demo data</button>
+            <button className="btn btn-ghost btn-sm" onClick={prefill}><Zap size={13} /> Pre-fill demo data</button>
           </div>
 
           <h1 className="display display-md" style={{ marginBottom: 8 }}>
@@ -204,14 +205,14 @@ export default function Onboarding() {
           {step === 3 && (
             <div style={{ display: 'grid', gap: 14 }}>
               <UploadBox
-                icon="📄"
+                icon={<FileText size={19} />}
                 title="Resume / education history"
                 sub="PDF or link — startups get this the moment you match"
                 done={!!form.resumeName}
                 onChange={(f) => { set('resume', f); set('resumeName', f?.name || '') }}
               />
               <UploadBox
-                icon="🪪"
+                icon={<IdCard size={19} />}
                 title="Government-issued ID"
                 sub={'Passport, driver\u2019s license, or national ID — encrypted, reviewed by humans only'}
                 done={!!form.idName}
@@ -222,7 +223,7 @@ export default function Onboarding() {
               <div className="card card-pad">
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
                   <div className="verify-box" style={{ flex: 1, border: 0, padding: 0, cursor: 'default' }}>
-                    <div className="v-icon">✉️</div>
+                    <div className="v-icon"><Mail size={19} /></div>
                     <div>
                       <div className="v-title">Email verification</div>
                       <div className="v-sub">A 6-digit code was sent to {form.email || 'your email'}</div>
@@ -259,7 +260,7 @@ export default function Onboarding() {
                     <button key={f.id} className={`field-card ${on ? 'on' : ''}`} onClick={() =>
                       set('fields', on ? form.fields.filter((x) => x !== f.id) : [...form.fields, f.id])
                     }>
-                      <span className="f-icon">{['⚙️', '🏗️', '📊', '💰', '🧮', '📣', '🎨', '🧭', '🤝'][FIELDS.indexOf(f)]}</span>
+                      <span className="f-icon">{(() => { const Ic = FIELD_ICONS[f.id] || Spark; return <Ic size={18} /> })()}</span>
                       <span className="f-label">{f.label}</span>
                       <span className="f-role">{f.role}</span>
                     </button>

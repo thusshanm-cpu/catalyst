@@ -3,12 +3,13 @@ import { useStore } from '../store.jsx'
 import { useToast } from '../toast.jsx'
 import { Match } from '../match.js'
 import { buildSummary } from '../data.js'
+import { ChatBubble, Calendar, Bookmark, ArrowRight, Spark } from '../components/icons.jsx'
 
 const DECISIONS = [
-  { id: 'continued', icon: '💬', title: 'Keep talking', sub: 'Extend this session now' },
-  { id: 'followup', icon: '📅', title: 'Request follow-up', sub: 'A longer, scheduled interview' },
-  { id: 'saved', icon: '🔖', title: 'Save connection', sub: 'Keep in touch, decide later' },
-  { id: 'skipped', icon: '↪', title: 'Skip to next match', sub: 'Respectful, no awkwardness' },
+  { id: 'continued', icon: <ChatBubble size={22} />, title: 'Keep talking', sub: 'Extend this session now' },
+  { id: 'followup', icon: <Calendar size={22} />, title: 'Request follow-up', sub: 'A longer, scheduled interview' },
+  { id: 'saved', icon: <Bookmark size={22} />, title: 'Save connection', sub: 'Keep in touch, decide later' },
+  { id: 'skipped', icon: <ArrowRight size={22} />, title: 'Skip to next match', sub: 'Respectful, no awkwardness' },
 ]
 
 export default function PostSession() {
@@ -37,7 +38,7 @@ export default function PostSession() {
   const pick = (d) => {
     setDecision(d)
     const dObj = DECISIONS.find((x) => x.id === d)
-    toast(`${dObj.title} — ${d === 'skipped' ? 'moving on' : 'noted'}`, dObj.icon)
+    toast(`${dObj.title} — ${d === 'skipped' ? 'moving on' : 'noted'}`, d === 'skipped' ? '↪' : '✓')
     if (real) Match.sendDecision(d)
   }
 
@@ -142,7 +143,7 @@ export default function PostSession() {
           {summary && (
             <div className="ai-panel">
               <div className="ai-head">
-                <div className="ai-icon">✦</div>
+                <div className="ai-icon"><Spark size={18} /></div>
                 <div>
                   <h3>Session summary</h3>
                   <div className="ai-sub">AI ASSISTANT · observations only · no hiring decision</div>

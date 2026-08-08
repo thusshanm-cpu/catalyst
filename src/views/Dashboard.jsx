@@ -3,8 +3,7 @@ import { useStore } from '../store.jsx'
 import { useToast } from '../toast.jsx'
 import { Match } from '../match.js'
 import { CANDIDATE_QUEUE, CANDIDATES, EMPLOYER_QUEUE, STARTUPS, fieldLabel, SIMULATIONS } from '../data.js'
-
-const FIELD_ICONS = { software: '⚙️', civil: '🏗️', business: '📊', finance: '💰', marketing: '📣', design: '🎨', product: '🧭', sales: '🤝', accounting: '🧮' }
+import { FIELD_ICONS, SIM_ICONS, Compass, Spark } from '../components/icons.jsx'
 
 /* the candidate's verified profile as a shareable resume snapshot */
 const resumeOf = (u) => ({
@@ -189,7 +188,7 @@ export default function Dashboard() {
             <div className="queue-list">
               {queue.map((q) => (
                   <button key={q.id} className="queue-item" onClick={() => start(q.field || mainField, q.roleType || 'Intern')}>
-                    <span className="q-icon">{FIELD_ICONS[q.field || mainField] || '🧭'}</span>
+                    <span className="q-icon">{(() => { const Ic = FIELD_ICONS[q.field || mainField] || Compass; return <Ic size={18} /> })()}</span>
                     <span>
                       <span className="q-title">{fieldLabel(q.field || mainField)} {q.roleType ? `· ${q.roleType}` : ''}</span>
                       <span className="q-sub" style={{ display: 'block' }}>
@@ -201,7 +200,7 @@ export default function Dashboard() {
                 ))}
               {!isCandidate && (
                 <div className="queue-item" style={{ cursor: 'default' }}>
-                  <span className="q-icon">{FIELD_ICONS[mainField]}</span>
+                  <span className="q-icon">{(() => { const Ic = FIELD_ICONS[mainField]; return <Ic size={18} /> })()}</span>
                   <span>
                     <span className="q-title">Employer simulation shortcuts</span>
                     <span className="q-sub" style={{ display: 'block' }}>Launch a live scenario any time, mid-session</span>
@@ -222,7 +221,7 @@ export default function Dashboard() {
                 <div className="queue-list">
                   {(SIMULATIONS[mainField] || SIMULATIONS.software).map((s) => (
                     <button key={s.id} className="queue-item" onClick={() => { toast('Practice launches from a live session — start a match', '💡') }}>
-                      <span className="q-icon">{s.id === 'debug' ? '🐛' : s.id === 'system' ? '🏛️' : '🧪'}</span>
+                      <span className="q-icon">{(() => { const Ic = SIM_ICONS[s.id] || Spark; return <Ic size={18} /> })()}</span>
                       <span>
                         <span className="q-title">{s.title}</span>
                         <span className="q-sub" style={{ display: 'block' }}>{s.kicker}</span>
