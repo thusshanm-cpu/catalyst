@@ -7,6 +7,11 @@
 A fully client-side React + Vite prototype. No backend, no API keys, no accounts — every flow
 (verification, matchmaking, sessions, simulations, AI summaries) runs in the browser.
 
+## Live demo
+
+**https://thusshanm-cpu.github.io/catalyst/** — deployed automatically from `main` on every push
+via GitHub Actions. Open it on any device, any network.
+
 ## What it is
 
 Catalyst is a talent-discovery platform where startups meet students through live, unscripted
