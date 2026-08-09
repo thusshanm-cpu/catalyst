@@ -12,6 +12,32 @@ A fully client-side React + Vite prototype. No backend, no API keys, no accounts
 **https://thusshanm-cpu.github.io/catalyst/** — deployed automatically from `main` on every push
 via GitHub Actions. Open it on any device, any network.
 
+## For judges — 60-second walkthrough
+
+Everything on the site is simulated end-to-end, so click anything and nothing breaks. Two quick
+ways to see the whole product:
+
+**Option A — watch it run (zero clicks).** On the landing page, scroll to **"Watch it run"** — a
+self-playing demo reel loops the entire flow in 60 seconds: radar match → live interview with an
+unexpected change → shared whiteboard → startup simulation → AI summary. Press pause anytime.
+
+**Option B — walk it yourself (under a minute):**
+
+1. **Landing** — hit **⚡ Instant demo · student** (or · startup). Sign-up is skipped; you land
+   verified and ready.
+2. **Dashboard** — press **Start a 10-minute session** and watch the radar find your blind match.
+   (Flip **DEMO SPEED** on to shrink sessions from 10:00 to 90 seconds.)
+3. **In the call** — open the shared **whiteboard** and draw together. As the employer, launch a
+   **simulation** (e.g. the checkout debugging bug) or fire **"Send an unexpected change"** to see
+   the candidate adapt live.
+4. **End session** — four decisions: continue, follow up, save, or skip. Then read the
+   consent-gated **AI summary** with animated scores.
+5. **Other role** — go back and take the other Instant demo to see the candidate's **resume appear
+   at match time**, before the session even starts.
+
+> Tip: with two browser tabs you can also try the real cross-tab live matchmaking — details under
+> **Live matchmaking** below.
+
 ## What it is
 
 Catalyst is a talent-discovery platform where startups meet students through live, unscripted

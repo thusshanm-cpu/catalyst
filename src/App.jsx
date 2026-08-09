@@ -8,54 +8,6 @@ import Dashboard from './views/Dashboard.jsx'
 import Session from './views/Session.jsx'
 import PostSession from './views/PostSession.jsx'
 import Profile from './views/Profile.jsx'
-import { X, Zap } from './components/icons.jsx'
-
-const JUDGE_STEPS = [
-  ['Landing', 'Hit “⚡ Instant demo · student” (or · startup) — skips sign-up, you land verified.'],
-  ['Dashboard', 'Press “Start a 10-minute session” and watch the radar find your blind match.'],
-  ['In the call', 'Open the shared whiteboard and draw together. As the employer, launch a simulation or “Send an unexpected change”.'],
-  ['End session', 'Four decisions — continue, follow up, save, or skip. Then read the AI summary.'],
-  ['Other role', 'Back out and take the other Instant demo to see the resume appear at match time.'],
-]
-
-/* Floating judge-facing demo guide — pill bottom-right, opens a step card. */
-function JudgeGuide() {
-  const [open, setOpen] = useState(() => !sessionStorage.getItem('catalyst-guide-seen'))
-  useEffect(() => {
-    sessionStorage.setItem('catalyst-guide-seen', '1')
-  }, [])
-
-  return (
-    <div className="judge-guide">
-      {open && (
-        <div className="guide-card">
-          <div className="guide-head">
-            <div>
-              <span className="guide-eyebrow">Judge mode · 60-second walkthrough</span>
-              <h4>How to demo Catalyst</h4>
-            </div>
-            <button className="guide-close" onClick={() => setOpen(false)} aria-label="Close demo guide"><X size={15} /></button>
-          </div>
-          <ol className="guide-steps">
-            {JUDGE_STEPS.map(([t, b], i) => (
-              <li key={t}>
-                <span className="guide-num">{i + 1}</span>
-                <div>
-                  <b>{t}</b>
-                  <p>{b}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-          <p className="guide-note">Every flow is simulated — click anything, nothing breaks.</p>
-        </div>
-      )}
-      <button className={`guide-pill ${open ? 'open' : ''}`} onClick={() => setOpen((o) => !o)}>
-        <Zap size={13} /> Demo guide
-      </button>
-    </div>
-  )
-}
 
 function Router() {
   const { state } = useStore()
@@ -114,7 +66,6 @@ export default function App() {
         <div className="page-glow" />
         <div className="bg-sweep" aria-hidden />
         <CursorGlow />
-        <JudgeGuide />
         <div className="app">
           <Router />
         </div>
