@@ -743,6 +743,7 @@ input, select, textarea { font-family: inherit; color: var(--text); }
   transition: border-color 0.16s, transform 0.16s;
   cursor: pointer;
   text-align: left; width: 100%;
+  color: var(--text);
 }
 .queue-item:hover { border-color: var(--line-strong); transform: translateY(-2px); }
 .queue-item .q-icon { width: 42px; height: 42px; border-radius: 11px; display: grid; place-items: center; font-size: 18px; background: var(--surface-3); border: 1px solid var(--line); flex-shrink: 0; }
